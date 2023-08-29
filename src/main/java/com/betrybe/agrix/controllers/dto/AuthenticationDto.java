@@ -1,5 +1,8 @@
 package com.betrybe.agrix.controllers.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 /**
  * The AuthenticationDTO class represents the data required for user authentication.
  * This DTO is used to transfer the username and password information from the client
@@ -14,4 +17,4 @@ package com.betrybe.agrix.controllers.dto;
  * @version 1.0
  * @since 2023-08-17
  */
-public record AuthenticationDto(String username, String password) {}
+public record AuthenticationDto(@NotNull String username, @NotNull String password) {}

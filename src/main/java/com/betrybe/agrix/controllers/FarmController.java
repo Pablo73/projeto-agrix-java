@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,6 +68,7 @@ public class FarmController {
    * @return A list containing all farms.
    */
   @GetMapping()
+  @PreAuthorize("hasAuthority('ADMIN', 'MANAGER', 'USER')")
   public List<Farm> getAllFarm() {
     List<Farm> allFarms = farmService.getAllFarm();
     return allFarms;

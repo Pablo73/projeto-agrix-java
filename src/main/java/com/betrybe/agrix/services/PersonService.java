@@ -1,6 +1,6 @@
 package com.betrybe.agrix.services;
 
-import com.betrybe.agrix.exception.PersonNotFoundException;
+import com.betrybe.agrix.exception.NotFoundException;
 import com.betrybe.agrix.models.entity.Person;
 import com.betrybe.agrix.models.repository.PersonRepository;
 import java.util.Optional;
@@ -35,13 +35,13 @@ public class PersonService {
    *
    * @param id The unique identifier of the person.
    * @return The retrieved person entity.
-   * @throws PersonNotFoundException If the specified person ID is not found in the database.
+   * @throws NotFoundException If the specified person ID is not found in the database.
    */
   public Person getPersonById(Long id) {
     Optional<Person> person = personRepository.findById(id);
 
     if (person.isEmpty()) {
-      throw new PersonNotFoundException();
+      throw new NotFoundException("Pessoa não encontrada!");
     }
 
     return person.get();
@@ -52,13 +52,13 @@ public class PersonService {
    *
    * @param username The username associated with the person.
    * @return The retrieved person entity.
-   * @throws PersonNotFoundException If the specified username is not found in the database.
+   * @throws NotFoundException If the specified username is not found in the database.
    */
   public Person getPersonByUsername(String username) {
     Optional<Person> person = personRepository.findByUsername(username);
 
     if (person.isEmpty()) {
-      throw new PersonNotFoundException();
+      throw new NotFoundException("Pessoa não encontrada!");
     }
 
     return person.get();
@@ -71,13 +71,16 @@ public class PersonService {
    * @return The created person entity.
    */
   public Person create(Person person) {
-    String hashedPassword = new BCryptPasswordEncoder().encode(person.getPassword());
+    Optional<Person> personOptional = personRepository.findByUsername(person.getUsername());
+    if (personOptional.isPresent()) {
+      throw new NotFoundException("Não foi possível cadastrar, nome de usuário já existe!");
+    } else {
+      String hashedPassword = new BCryptPasswordEncoder().encode(person.getPassword());
 
-    Person newPerson = new Person();
-    newPerson.setUsername(person.getUsername());
-    newPerson.setPassword(hashedPassword);
-    newPerson.setRole(person.getRole());
+      person.setPassword(hashedPassword);
 
-    return personRepository.save(newPerson);
+      return personRepository.save(person);
+    }
   }
+
 }
