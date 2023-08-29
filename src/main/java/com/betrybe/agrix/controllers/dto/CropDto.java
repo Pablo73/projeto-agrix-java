@@ -10,7 +10,7 @@ import java.time.LocalDate;
  * @since 2023-08-10
  */
 
-public record CropNewDto(
+public record CropDto(
     Long id,
     String name,
     Double plantedArea,

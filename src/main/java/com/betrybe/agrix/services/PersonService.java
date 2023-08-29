@@ -5,6 +5,7 @@ import com.betrybe.agrix.models.entity.Person;
 import com.betrybe.agrix.models.repository.PersonRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -70,6 +71,13 @@ public class PersonService {
    * @return The created person entity.
    */
   public Person create(Person person) {
-    return personRepository.save(person);
+    String hashedPassword = new BCryptPasswordEncoder().encode(person.getPassword());
+
+    Person newPerson = new Person();
+    newPerson.setUsername(person.getUsername());
+    newPerson.setPassword(hashedPassword);
+    newPerson.setRole(person.getRole());
+
+    return personRepository.save(newPerson);
   }
 }

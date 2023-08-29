@@ -14,8 +14,6 @@ import java.time.LocalDate;
  */
 
 public record CropCreationDto(
-    Long id,
-    Farm farm,
     @NotBlank String name,
     @NotNull Double plantedArea,
     @NotNull LocalDate plantedDate,

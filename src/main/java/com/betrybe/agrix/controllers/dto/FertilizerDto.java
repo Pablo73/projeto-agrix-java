@@ -1,14 +1,13 @@
 package com.betrybe.agrix.controllers.dto;
 
 import com.betrybe.agrix.models.entity.Fertilizer;
-import jakarta.validation.constraints.NotBlank;
 
 /**
- * The FertilizerDto class is a data transfer object representing fertilizer data.
- * This class is used for receiving and sending fertilizer-related data through the API.
+ * The FertilizerNewDto class is a data transfer object representing new fertilizer data.
+ * This class is used for sending fertilizer-related data through the API in responses.
  * It contains fields representing the attributes of a fertilizer.
  *
- * <p>This class uses the record feature introduced in Java 16.</p>
+ * <p>This class is designed to hold new fertilizer data.</p>
  *
  * @author Pablo
  * @version 1.0
@@ -16,11 +15,10 @@ import jakarta.validation.constraints.NotBlank;
  */
 public record FertilizerDto(
     Long id,
-    @NotBlank String name,
-    @NotBlank String brand,
-    @NotBlank String composition
+    String name,
+    String brand,
+    String composition
 ) {
-
   /**
    * Converts the FertilizerDto to a Fertilizer entity.
    *
@@ -29,4 +27,5 @@ public record FertilizerDto(
   public Fertilizer toFertilizer() {
     return new Fertilizer(id, name, brand, composition);
   }
+
 }

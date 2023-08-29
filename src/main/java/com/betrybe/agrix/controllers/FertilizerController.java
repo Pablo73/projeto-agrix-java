@@ -1,9 +1,7 @@
 package com.betrybe.agrix.controllers;
 
 import com.betrybe.agrix.controllers.dto.FertilizerDto;
-import com.betrybe.agrix.controllers.dto.FertilizerNewDto;
 import com.betrybe.agrix.exception.ErrorRequestException;
-import com.betrybe.agrix.models.entity.Crop;
 import com.betrybe.agrix.models.entity.Fertilizer;
 import com.betrybe.agrix.services.FertilizerService;
 import com.betrybe.agrix.util.DtoConverter;
@@ -62,7 +60,7 @@ public class FertilizerController {
       Fertilizer newFertilizer = fertilizerService.insertFertilizer(fertilizerDto.toFertilizer());
 
       DtoConverter dtoConverter = new DtoConverter();
-      FertilizerNewDto fertilizerNewDto = dtoConverter.fertilizerToDto(newFertilizer);
+      FertilizerDto fertilizerNewDto = dtoConverter.fertilizerToDto(newFertilizer);
 
       return ResponseEntity.status(HttpStatus.CREATED).body(fertilizerNewDto);
 
@@ -78,12 +76,12 @@ public class FertilizerController {
    */
 
   @GetMapping("fertilizers")
-  public ResponseEntity<List<FertilizerNewDto>> getAllFertilizer() {
+  public ResponseEntity<List<FertilizerDto>> getAllFertilizer() {
     List<Fertilizer> allFertilizer = fertilizerService.getAllFertilizer();
 
     DtoConverter dtoConverter = new DtoConverter();
 
-    List<FertilizerNewDto> listFertilizer = allFertilizer.stream()
+    List<FertilizerDto> listFertilizer = allFertilizer.stream()
         .map(fertilizer -> dtoConverter.fertilizerToDto(fertilizer))
         .collect(Collectors.toList());
 
@@ -97,11 +95,11 @@ public class FertilizerController {
    * @return A ResponseEntity containing details of the requested fertilizer.
    */
   @GetMapping("fertilizers/{fertilizerId}")
-  public ResponseEntity<FertilizerNewDto> findByFertilizerId(@PathVariable Long fertilizerId) {
+  public ResponseEntity<FertilizerDto> findByFertilizerId(@PathVariable Long fertilizerId) {
     Fertilizer byFertilizerId = fertilizerService.findByFertilizerId(fertilizerId);
 
     DtoConverter dtoConverter = new DtoConverter();
-    FertilizerNewDto fertilizer = dtoConverter.fertilizerToDto(byFertilizerId);
+    FertilizerDto fertilizer = dtoConverter.fertilizerToDto(byFertilizerId);
 
     return ResponseEntity.ok(fertilizer);
 
@@ -115,13 +113,13 @@ public class FertilizerController {
    *     associated with the crop.
    */
   @GetMapping("crops/{cropId}/fertilizers")
-  public ResponseEntity<List<FertilizerNewDto>> findByAssociationFertilizer(
+  public ResponseEntity<List<FertilizerDto>> findByAssociationFertilizer(
       @PathVariable Long cropId) {
     List<Fertilizer> fertilizers = fertilizerService.findByAssociationFertilizer(cropId);
 
     DtoConverter dtoConverter = new DtoConverter();
 
-    List<FertilizerNewDto> listFertilizer = fertilizers.stream()
+    List<FertilizerDto> listFertilizer = fertilizers.stream()
         .map(fertilizer -> dtoConverter.fertilizerToDto(fertilizer))
         .collect(Collectors.toList());
 

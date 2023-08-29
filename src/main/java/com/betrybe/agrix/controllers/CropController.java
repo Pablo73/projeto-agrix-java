@@ -1,8 +1,7 @@
 package com.betrybe.agrix.controllers;
 
 import com.betrybe.agrix.controllers.dto.CropCreationDto;
-import com.betrybe.agrix.controllers.dto.CropNewDto;
-import com.betrybe.agrix.exception.ErrorRequestException;
+import com.betrybe.agrix.controllers.dto.CropDto;
 import com.betrybe.agrix.models.entity.Crop;
 import com.betrybe.agrix.services.CropService;
 import com.betrybe.agrix.util.DtoConverter;
@@ -57,13 +56,13 @@ public class CropController {
    * @return A ResponseEntity with the created crop's data and an HTTP status code of 201 (CREATED).
    */
   @PostMapping("farms/{farmId}/crops")
-  public ResponseEntity<CropNewDto> createCrop(
+  public ResponseEntity<CropDto> createCrop(
       @PathVariable Long farmId,
       @RequestBody @Valid CropCreationDto cropDto) {
     Crop newCrop = cropService.insertCrop(farmId, cropDto);
 
     DtoConverter dtoConverter = new DtoConverter();
-    CropNewDto newCropDto = dtoConverter.cropToDto(newCrop);
+    CropDto newCropDto = dtoConverter.cropToDto(newCrop);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(newCropDto);
   }
@@ -75,12 +74,12 @@ public class CropController {
    * @return A ResponseEntity containing a list of CropNewDto objects associated with the farm.
    */
   @GetMapping("farms/{farmId}/crops")
-  public ResponseEntity<List<CropNewDto>> findByFarmId(@PathVariable Long farmId) {
+  public ResponseEntity<List<CropDto>> findByFarmId(@PathVariable Long farmId) {
     List<Crop> listFarmId = cropService.findByFarmId(farmId);
 
     DtoConverter dtoConverter = new DtoConverter();
 
-    List<CropNewDto> cropDtos = listFarmId.stream()
+    List<CropDto> cropDtos = listFarmId.stream()
         .map(crop -> dtoConverter.cropToDto(crop))
         .collect(Collectors.toList());
 
@@ -93,12 +92,12 @@ public class CropController {
    * @return A ResponseEntity containing a list of CropNewDto objects for all crops.
    */
   @GetMapping("crops")
-  public ResponseEntity<List<CropNewDto>> findByFarmId() {
+  public ResponseEntity<List<CropDto>> findByFarmId() {
     List<Crop> listFarmId = cropService.allcrop();
 
     DtoConverter dtoConverter = new DtoConverter();
 
-    List<CropNewDto> cropDtos = listFarmId.stream()
+    List<CropDto> cropDtos = listFarmId.stream()
         .map(crop -> dtoConverter.cropToDto(crop))
         .collect(Collectors.toList());
 
@@ -112,11 +111,11 @@ public class CropController {
    * @return A ResponseEntity containing details of the requested crop.
    */
   @GetMapping("crops/{id}")
-  public ResponseEntity<CropNewDto> findByCropId(@PathVariable Long id) {
+  public ResponseEntity<CropDto> findByCropId(@PathVariable Long id) {
     Crop cropId = cropService.getByIdCrop(id);
 
     DtoConverter dtoConverter = new DtoConverter();
-    CropNewDto newCropDto = dtoConverter.cropToDto(cropId);
+    CropDto newCropDto = dtoConverter.cropToDto(cropId);
 
     return ResponseEntity.ok(newCropDto);
   }
@@ -129,7 +128,7 @@ public class CropController {
    * @return A list of crops.
    */
   @GetMapping("crops/search")
-  public ResponseEntity<List<CropNewDto>> serchCropByHarvestDate(
+  public ResponseEntity<List<CropDto>> serchCropByHarvestDate(
       @RequestParam("start") LocalDate startDate,
       @RequestParam("end") LocalDate endDate
   ) {
@@ -137,7 +136,7 @@ public class CropController {
 
     DtoConverter dtoConverter = new DtoConverter();
 
-    List<CropNewDto> cropDtos = listFarmId.stream()
+    List<CropDto> cropDtos = listFarmId.stream()
         .map(crop -> dtoConverter.cropToDto(crop))
         .collect(Collectors.toList());
 

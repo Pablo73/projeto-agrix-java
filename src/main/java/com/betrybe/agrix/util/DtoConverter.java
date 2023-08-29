@@ -1,9 +1,11 @@
 package com.betrybe.agrix.util;
 
-import com.betrybe.agrix.controllers.dto.CropNewDto;
-import com.betrybe.agrix.controllers.dto.FertilizerNewDto;
+import com.betrybe.agrix.controllers.dto.CropDto;
+import com.betrybe.agrix.controllers.dto.FertilizerDto;
+import com.betrybe.agrix.controllers.dto.PersonDto;
 import com.betrybe.agrix.models.entity.Crop;
 import com.betrybe.agrix.models.entity.Fertilizer;
+import com.betrybe.agrix.models.entity.Person;
 
 /**
  * The DtoConverter class provides utility methods for converting entity
@@ -26,8 +28,8 @@ public class DtoConverter {
    * @param crop The Crop entity to be converted.
    * @return The corresponding CropNewDto.
    */
-  public static CropNewDto cropToDto(Crop crop) {
-    return new CropNewDto(
+  public static CropDto cropToDto(Crop crop) {
+    return new CropDto(
         crop.getId(),
         crop.getName(),
         crop.getPlantedArea(),
@@ -43,12 +45,26 @@ public class DtoConverter {
    * @param fertilizer The Fertilizer entity to be converted.
    * @return The corresponding FertilizerNewDto.
    */
-  public static FertilizerNewDto fertilizerToDto(Fertilizer fertilizer) {
-    return new FertilizerNewDto(
+  public static FertilizerDto fertilizerToDto(Fertilizer fertilizer) {
+    return new FertilizerDto(
         fertilizer.getId(),
         fertilizer.getName(),
         fertilizer.getBrand(),
         fertilizer.getComposition()
+    );
+  }
+
+  /**
+   * Converts a Person entity to a PersonDto.
+   *
+   * @param person The Person entity to be converted.
+   * @return The corresponding PersonDto.
+   */
+  public static PersonDto personToDto(Person person) {
+    return new PersonDto(
+        person.getId(),
+        person.getUsername(),
+        person.getRole()
     );
   }
 }
