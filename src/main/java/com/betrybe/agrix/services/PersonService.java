@@ -5,6 +5,9 @@ import com.betrybe.agrix.models.entity.Person;
 import com.betrybe.agrix.models.repository.PersonRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +19,7 @@ import org.springframework.stereotype.Service;
  * @since 2023-08-25
  */
 @Service
-public class PersonService {
+public class PersonService implements UserDetailsService {
 
   private final PersonRepository personRepository;
 
@@ -55,13 +58,13 @@ public class PersonService {
    * @throws NotFoundException If the specified username is not found in the database.
    */
   public Person getPersonByUsername(String username) {
-    Optional<Person> person = personRepository.findByUsername(username);
+    Person person = personRepository.findByUsername(username);
 
-    if (person.isEmpty()) {
+    if (person == null) {
       throw new NotFoundException("Pessoa não encontrada!");
     }
 
-    return person.get();
+    return person;
   }
 
   /**
@@ -71,8 +74,8 @@ public class PersonService {
    * @return The created person entity.
    */
   public Person create(Person person) {
-    Optional<Person> personOptional = personRepository.findByUsername(person.getUsername());
-    if (personOptional.isPresent()) {
+    Person personOptional = personRepository.findByUsername(person.getUsername());
+    if (personOptional != null) {
       throw new NotFoundException("Não foi possível cadastrar, nome de usuário já existe!");
     } else {
       String hashedPassword = new BCryptPasswordEncoder().encode(person.getPassword());
@@ -83,4 +86,8 @@ public class PersonService {
     }
   }
 
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    return personRepository.findByUsername(username);
+  }
 }

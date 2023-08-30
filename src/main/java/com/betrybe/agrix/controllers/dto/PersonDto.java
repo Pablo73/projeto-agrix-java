@@ -11,7 +11,7 @@ import com.betrybe.agrix.security.Role;
 public record PersonDto(
     Long id,
     String username,
-    String role
+    Role role
 ) {
 
 }

@@ -1,5 +1,6 @@
 package com.betrybe.agrix.models.entity;
 
+import com.betrybe.agrix.security.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -38,7 +38,7 @@ public class Person implements UserDetails, GrantedAuthority {
 
   private String password;
 
-  private String role;
+  private Role role;
 
   public Person() {
   }
@@ -51,7 +51,7 @@ public class Person implements UserDetails, GrantedAuthority {
    * @param password The password of the person.
    * @param role The role associated with the person.
    */
-  public Person(Long id, String username, String password, String role) {
+  public Person(Long id, String username, String password, Role role) {
     this.id = id;
     this.username = username;
     this.password = password;
@@ -78,11 +78,11 @@ public class Person implements UserDetails, GrantedAuthority {
     this.password = password;
   }
 
-  public String getRole() {
+  public Role getRole() {
     return role;
   }
 
-  public void setRole(String role) {
+  public void setRole(Role role) {
     this.role = role;
   }
 
@@ -100,7 +100,7 @@ public class Person implements UserDetails, GrantedAuthority {
   @JsonIgnore
   @Override
   public String getAuthority() {
-    return this.getRole();
+    return this.getRole().getName();
   }
 
   @Override

@@ -68,7 +68,7 @@ public class FarmController {
    * @return A list containing all farms.
    */
   @GetMapping()
-  @PreAuthorize("hasAuthority('ADMIN', 'MANAGER', 'USER')")
+  @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
   public List<Farm> getAllFarm() {
     List<Farm> allFarms = farmService.getAllFarm();
     return allFarms;

@@ -1,6 +1,7 @@
 package com.betrybe.agrix.controllers.dto;
 
 import com.betrybe.agrix.models.entity.Person;
+import com.betrybe.agrix.security.Role;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -14,7 +15,7 @@ public record PersonCreationDto(
     Long id,
     @NotNull String username,
     @NotNull String password,
-    @NotNull String role
+    @NotNull Role role
 ) {
   public Person toPerson() {
     return new Person(id, username, password, role);

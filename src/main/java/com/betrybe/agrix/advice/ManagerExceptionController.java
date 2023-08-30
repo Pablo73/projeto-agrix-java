@@ -1,6 +1,7 @@
 package com.betrybe.agrix.advice;
 
 import com.betrybe.agrix.exception.ErrorRequestException;
+import com.betrybe.agrix.exception.ForbiddenException;
 import com.betrybe.agrix.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,20 @@ public class ManagerExceptionController {
   public ResponseEntity<String> handleErrorRequestException(RuntimeException exception) {
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
+        .body(exception.getMessage());
+  }
+
+  /**
+   * Exception handler method for handling forbiddenException.
+   *
+   * @param exception The ForbiddenException that occurred.
+   * @return A ResponseEntity with HTTP status code.
+   */
+  @ExceptionHandler(ForbiddenException.class)
+  public ResponseEntity<String> handleForbiddenException(
+      ForbiddenException exception) {
+    return ResponseEntity
+        .status(HttpStatus.FORBIDDEN)
         .body(exception.getMessage());
   }
 

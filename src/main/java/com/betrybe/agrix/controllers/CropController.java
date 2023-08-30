@@ -92,8 +92,8 @@ public class CropController {
    *
    * @return A ResponseEntity containing a list of CropNewDto objects for all crops.
    */
-  @GetMapping("crops")
-  @PreAuthorize("hasAuthority('ADMIN', 'MANAGER')")
+  @GetMapping("/crops")
+  @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
   public ResponseEntity<List<CropDto>> findByFarmId() {
     List<Crop> listFarmId = cropService.allcrop();
 

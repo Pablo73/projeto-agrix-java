@@ -14,11 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
 /**
  * The PersonController class provides a REST API for managing person-related operations.
@@ -83,19 +88,45 @@ public class PersonController {
    */
   @PostMapping("/auth/login")
   public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDto authenticationDto) {
-    try {
-      BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-      Person person = personService.getPersonByUsername(authenticationDto.username());
 
-      if (passwordEncoder.matches(authenticationDto.password(), person.getPassword())) {
-        String token = tokenService.generateToken(person);
-        ResponseDto<String> response = new ResponseDto<>(token);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-      } else {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Senha não autorizada");
-      }
-    } catch (NotFoundException e) {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário não autorizado");
+    try {
+      UsernamePasswordAuthenticationToken usernamePassword =
+          new UsernamePasswordAuthenticationToken(
+              authenticationDto.username(),
+              authenticationDto.password()
+          );
+
+      Authentication auth = authenticationManager.authenticate(usernamePassword);
+
+      Person person = (Person) auth.getPrincipal();
+
+      String token = tokenService.generateToken(person);
+
+      ResponseDto<String> response = new ResponseDto<>(token);
+
+      return ResponseEntity.status(HttpStatus.OK).body(response);
+
+    } catch (BadCredentialsException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Senha não autorizada!");
+
+    } catch (InternalAuthenticationServiceException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário não autorizado!");
     }
+
+
+    //    try {
+    //      BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    //      Person person = personService.getPersonByUsername(authenticationDto.username());
+    //
+    //      if (passwordEncoder.matches(authenticationDto.password(), person.getPassword())) {
+    //        String token = tokenService.generateToken(person);
+    //        ResponseDto<String> response = new ResponseDto<>(token);
+    //        return ResponseEntity.status(HttpStatus.OK).body(response);
+    //      } else {
+    //        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Senha não autorizada");
+    //      }
+    //    } catch (NotFoundException e) {
+    //        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário não autorizado");
+    //    }
   }
 }
