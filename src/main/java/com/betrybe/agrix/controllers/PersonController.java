@@ -68,7 +68,7 @@ public class PersonController {
    *         code of 201 (CREATED).
    */
   @PostMapping("/persons")
-  public ResponseEntity<?> createPerson(@RequestBody @Valid PersonCreationDto personCreationDto) {
+  public ResponseEntity<PersonDto> createPerson(@RequestBody @Valid PersonCreationDto personCreationDto) {
     Person createPerson = personService.create(personCreationDto.toPerson());
 
     DtoConverter dtoConverter = new DtoConverter();
@@ -112,21 +112,5 @@ public class PersonController {
     } catch (InternalAuthenticationServiceException e) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário não autorizado!");
     }
-
-
-    //    try {
-    //      BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    //      Person person = personService.getPersonByUsername(authenticationDto.username());
-    //
-    //      if (passwordEncoder.matches(authenticationDto.password(), person.getPassword())) {
-    //        String token = tokenService.generateToken(person);
-    //        ResponseDto<String> response = new ResponseDto<>(token);
-    //        return ResponseEntity.status(HttpStatus.OK).body(response);
-    //      } else {
-    //        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Senha não autorizada");
-    //      }
-    //    } catch (NotFoundException e) {
-    //        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário não autorizado");
-    //    }
   }
 }

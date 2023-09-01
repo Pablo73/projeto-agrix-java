@@ -53,6 +53,7 @@ public class FarmController {
    * @return A ResponseEntity with the created farm and an HTTP status code of 201 (CREATED).
    */
   @PostMapping()
+  @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
   public ResponseEntity<?> createFarm(@RequestBody @Valid FarmDto farmDto) {
     try {
       Farm newFarm = farmService.insertFarm(farmDto.toFarm());
@@ -82,6 +83,7 @@ public class FarmController {
    *     status code of 200 (OK), or a 404 (Not Found) response if the farm does not exist.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
   public ResponseEntity<Farm> getFarmById(@PathVariable Long id) {
     Optional<Farm> optionalFarm = farmService.getFarmById(id);
 
