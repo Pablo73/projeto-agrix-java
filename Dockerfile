@@ -1,13 +1,20 @@
 # 1º estágio
-FROM maven:3-openjdk-17 as build-image
-WORKDIR /to-build-app
-RUN mvn dependency:go-offline
-COPY . .
-RUN mvn clean package -DskipTests
+FROM eclipse-temurin:17-jdk-jammy as build-image
+WORKDIR /app
+
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+
+RUN ./mvnw dependency:go-offline
+
+COPY ./src/main/ ./src/main/
+
+RUN ./mvnw clean package
 
 # 2º estágio
-FROM eclipse-temurin:17-jre-alpine
-WORKDIR /app
-COPY --from=build-image /to-build-app/target/*.jar /app/app.jar
+FROM eclipse-temurin:17-jre-jammy as deploy-image
+
+COPY --from=build-image /app/target/*.jar /app/app.jar
+
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
