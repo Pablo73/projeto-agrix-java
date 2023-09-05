@@ -68,7 +68,11 @@ public class PersonController {
    *         code of 201 (CREATED).
    */
   @PostMapping("/persons")
-  public ResponseEntity<PersonDto> createPerson(@RequestBody @Valid PersonCreationDto personCreationDto) {
+  public ResponseEntity<PersonDto> createPerson(
+      @RequestBody
+      @Valid
+      PersonCreationDto personCreationDto
+  ) {
     Person createPerson = personService.create(personCreationDto.toPerson());
 
     DtoConverter dtoConverter = new DtoConverter();
